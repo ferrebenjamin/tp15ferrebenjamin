@@ -1,0 +1,89 @@
+!pip install mysql-connector-python
+
+import mysql.connector
+
+conexion = mysql.connector.connect(
+    host="bz4jl9yamraicuelj9ga-mysql.services.clever-cloud.com",
+    user="udrasfs9sfuivv70",
+    password="k4VM7T22dTIXo00vUEmI",
+    database="bz4jl9yamraicuelj9ga",
+    port=3306
+)
+
+cursor = conexion.cursor()
+print("Conectado ✔️")
+
+print("\nCONSULTA 1:")
+cursor.execute("""
+SELECT 
+    p.nombre AS parcela,
+    p.ubicacion,
+    p.area_m2,
+    m.nombre AS responsable
+FROM parcelas p
+JOIN miembros m ON p.responsable_id = m.miembro_id
+ORDER BY p.nombre;
+""")
+for fila in cursor.fetchall():
+    print(fila)
+
+print("\nCONSULTA 2:")
+cursor.execute("""
+SELECT 
+    pa.plantacion_id,
+    p.nombre AS parcela,
+    c.nombre AS cultivo,
+    pa.fecha_siembra,
+    pa.cantidad_semillas
+FROM plantaciones pa
+JOIN parcelas p ON pa.parcela_id = p.parcela_id
+JOIN cultivos c ON pa.cultivo_id = c.cultivo_id
+WHERE pa.estado = 'activa';
+""")
+for fila in cursor.fetchall():
+    print(fila)
+
+print("\nCONSULTA 3:")
+cursor.execute("""
+SELECT 
+    t.titulo,
+    m.nombre AS asignado_a,
+    t.estado,
+    t.fecha_vencimiento
+FROM tareas t
+JOIN miembros m ON t.asignada_a = m.miembro_id
+WHERE t.estado IN ('pendiente','en_progreso')
+ORDER BY t.fecha_vencimiento;
+""")
+for fila in cursor.fetchall():
+    print(fila)
+
+print("\nCONSULTA 4:")
+cursor.execute("""
+SELECT 
+    i.nombre AS item,
+    i.cantidad,
+    i.unidad,
+    c.nombre AS cultivo_asociado
+FROM inventario i
+LEFT JOIN cultivos c ON i.nombre = c.nombre
+WHERE i.tipo = 'semilla';
+""")
+for fila in cursor.fetchall():
+    print(fila)
+
+print("\nCONSULTA 5:")
+cursor.execute("""
+SELECT 
+    p.titulo,
+    m.nombre AS autor,
+    p.creado_en,
+    COUNT(c.comentario_id) AS total_comentarios
+FROM foro_posts p
+JOIN miembros m ON p.autor_id = m.miembro_id
+LEFT JOIN foro_comentarios c ON p.post_id = c.post_id
+GROUP BY p.post_id, p.titulo, m.nombre, p.creado_en
+ORDER BY total_comentarios DESC;
+""")
+for fila in cursor.fetchall():
+    print(fila)

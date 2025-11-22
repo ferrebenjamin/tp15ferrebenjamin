@@ -164,10 +164,3 @@ A continuación, se describen las consultas y cómo interactúan con la base de 
         *   cantidad total de comentarios
     *   Ordenar por cantidad de comentarios (mayor a menor).
 
-## Criterios de evaluación
-
-*   Correcto uso de SELECT, JOIN, WHERE, GROUP BY, ORDER BY.
-*   Claridad y legibilidad del archivo consultas.sql.
-*   Buena presentación del README.md.
-*   Correcto uso de GitHub para la entrega.
-*
